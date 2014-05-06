@@ -187,3 +187,7 @@ Initial release
 ### Version 0.0.2
 
 Fix: Added handlebars as a required dependency
+
+### Version 0.0.3
+
+Fix: Added dateformat as a required dependency
