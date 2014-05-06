@@ -183,3 +183,7 @@ grunt.initConfig({
 ### Version 0.0.1
 
 Initial release
+
+### Version 0.0.2
+
+Fix: Added handlebars as a required dependency
