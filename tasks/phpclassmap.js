@@ -9,12 +9,8 @@
 'use strict';
 
 module.exports = function (grunt) {
-
-
-
     // Please see the Grunt documentation for more information regarding task
     // creation: http://gruntjs.com/creating-tasks
-
     grunt.registerMultiTask('phpclassmap', 'Generate PHP classmaps', function () {
 
         var cp = require('child_process'),
@@ -75,16 +71,10 @@ module.exports = function (grunt) {
         var check_php = function(cb) {
             // Executes the 'php -v' command and only redirect errors to the console
             var childProcess = cp.exec(options['phpbin'] + ' -v', function (error, stdout, stderr) {
-
                 // On success error will be null
                 if (error !== null) {
-
-                    grunt.log.writeln(error);
-
+                    grunt.log.error(error);
                 }
-
-                grunt.log.writeln(stderr);
-
             });
 
             childProcess.on('exit', function (code) {
@@ -118,21 +108,13 @@ module.exports = function (grunt) {
                     files.push(filepath);
                 }
 
-
-
                 var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '"';
-
-
+				
                 cp.exec(command, function (error, stdout, stderr) {
-
                     // On success error will be null
                     if (error !== null) {
-
-                        grunt.log.writeln('ERROR OCCURED' + error);
-
+                        grunt.log.error('ERROR OCCURED: ' + error);
                     }
-
-                    grunt.log.writeln(stderr);
 
                     var files = JSON.parse(stdout);
 
@@ -140,7 +122,6 @@ module.exports = function (grunt) {
 
                     // Iterate over the classes, interfaces and traits we got back from the php cli script
                     for (var i in files) {
-                        grunt.log.writeln(options['basedir']);
                         if (files.hasOwnProperty(i)) {
                             var items = files[i];
                             for (var j in items) {
@@ -156,12 +137,8 @@ module.exports = function (grunt) {
 
                     options['render'].call(this, entries, function(src) {
                         grunt.file.write(options['dest'], src);
-
                         done();
                     });
-
-
-
                 });
             });
         }.bind(this));

@@ -191,3 +191,8 @@ Fix: Added handlebars as a required dependency
 ### Version 0.0.3
 
 Fix: Added dateformat as a required dependency
+
+### Version 0.0.4
+
+Fix: Remove some debug statements
+Fix: Typo in the default template comments
