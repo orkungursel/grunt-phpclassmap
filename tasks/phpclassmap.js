@@ -107,38 +107,38 @@ module.exports = function (grunt) {
                 } else {
                     files.push(filepath);
                 }
+            });
 
-                var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '"';
-				
-                cp.exec(command, function (error, stdout, stderr) {
-                    // On success error will be null
-                    if (error !== null) {
-                        grunt.log.error('ERROR OCCURED: ' + error);
-                    }
+            var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '"';
 
-                    var files = JSON.parse(stdout);
+            cp.exec(command, function (error, stdout, stderr) {
+                // On success error will be null
+                if (error !== null) {
+                    grunt.log.error('ERROR OCCURED: ' + error);
+                }
 
-                    var entries = [];
+                var files = JSON.parse(stdout);
 
-                    // Iterate over the classes, interfaces and traits we got back from the php cli script
-                    for (var i in files) {
-                        if (files.hasOwnProperty(i)) {
-                            var items = files[i];
-                            for (var j in items) {
-                                if (items.hasOwnProperty(j)) {
-                                    var item = files[i][j];
-                                    item['absolute_path'] = i.replace(/\\/g, '/');
-                                    item['relative_path'] = item['absolute_path'].substr(path.resolve(options['basedir']).length).replace(/\\/g, '/');
-                                    entries.push(options['filter'].call(this, item));
-                                }
+                var entries = [];
+
+                // Iterate over the classes, interfaces and traits we got back from the php cli script
+                for (var i in files) {
+                    if (files.hasOwnProperty(i)) {
+                        var items = files[i];
+                        for (var j in items) {
+                            if (items.hasOwnProperty(j)) {
+                                var item = files[i][j];
+                                item['absolute_path'] = i.replace(/\\/g, '/');
+                                item['relative_path'] = item['absolute_path'].substr(path.resolve(options['basedir']).length).replace(/\\/g, '/');
+                                entries.push(options['filter'].call(this, item));
                             }
                         }
                     }
+                }
 
-                    options['render'].call(this, entries, function(src) {
-                        grunt.file.write(options['dest'], src);
-                        done();
-                    });
+                options['render'].call(this, entries, function(src) {
+                    grunt.file.write(options['dest'], src);
+                    done();
                 });
             });
         }.bind(this));

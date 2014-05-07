@@ -1,7 +1,7 @@
 {
   "name": "grunt-phpclassmap",
   "description": "Generate PHP classmap files using Grunt",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "https://github.com/maikelvanmaurik/grunt-phpclassmap",
   "author": {
     "name": "Maikel van Maurik",
