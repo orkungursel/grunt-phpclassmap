@@ -29,6 +29,7 @@ module.exports = function (grunt) {
             dest: null,
             phpbin: 'php',
             template: null,
+            quote_path: true,
             filter: function(item) { return item },
             render: function(items, cb) {
                 fs.readFile(options.template, function(err, template) {
@@ -41,7 +42,7 @@ module.exports = function (grunt) {
                     // Compile the template
                     var compiled = handlebars.compile(template);
 
-                    cb(compiled({items: items, date: dateformat(new Date(), "isoDateTime")}));
+                    cb(compiled({quote_path: options.quote_path, items: items, date: dateformat(new Date(), "isoDateTime")}));
                 });
             }
         });
