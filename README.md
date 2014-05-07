@@ -61,15 +61,24 @@ Default value: none
 
 Where to write the classmap file to.
 
-#### options.filter
+#### options.map
 Type: `Function`
+Default value: none
 
-Function which filters the entry inside the destination classmap file. The function recieves a item object which in turn has the following properties:
+Function which maps the entry inside the destination classmap file. The function recieves a item object which in turn has the following properties:
 
 * absolute_path (absolute path to the object)
 * relative_path (relative path to the object, which is the absolute_path without the basedir option)
 * name (name of the object)
 * type (class, interface, trait)
+
+**IMPORTANT** The function should return the resulting item
+
+#### options.filter
+Type: `Function`
+Default value: none
+
+Function which can be used to filter out unwanted items for the classmap.
 
 ### Usage Examples
 
@@ -106,7 +115,7 @@ return array(
 /* EOF */
 ```
 
-#### <a name="filter_example"></a>Filter items to use a defined constant
+#### <a name="filter_example"></a>Map items to use a defined constant
 
 In this example, we use override the format function in order to use a defined constant inside the resulting classmap
 
@@ -116,7 +125,7 @@ grunt.initConfig({
         options: {
 			quote_path: false,
             dest: './classmap.php',
-            filter: function(item) {
+            map: function(item) {
                 item.relative_path = 'DEFINED_BASE_PATH_CONSTANT . "' + item.relative_path + '"';
                 return item;
             }
@@ -190,17 +199,17 @@ grunt.initConfig({
 
 **IMPORTANT**: When you override the render method be sure to call to callback which is provided to the function, as this is the function which writes to results to the classmap.
 
-#### <a name="custom_filter_and_render"></a> Overriding the filter and render
+#### <a name="custom_map_and_render"></a> Overriding the map and render
 
-In this example you can see how you can mix the filter and render function to do some custom stuff.
-Note that the filter allows you to add additional data, which is written in de render function. This could have also been
+In this example you can see how you can mix the map and render function to do some custom stuff.
+Note that the map allows you to add additional data, which is written in de render function. This could have also been
 done by providing a custom template.
 
 ```js
 grunt.initConfig({
     phpclassmap: {
         options: {
-            filter: function (item) {
+            map: function (item) {
                 item.rewritten_path = your_rewrite_function(item);
                 return item;
             },
@@ -215,6 +224,21 @@ grunt.initConfig({
                         items.push('"' + objects[i].name + '" => "' + objects[i].rewritten_path) + '"';
                     }
             cb(content.replace('%items%', items.join(',')));
+        }
+```
+
+#### <a name="filter_example"></a> Filter out some unwanted classes
+
+The filter option can be used to remove unwanted items, the function should return a `Boolean`. It should return true to include the item in the classmap; otherwise, false.
+
+```js
+grunt.initConfig({
+    phpclassmap: {
+        options: {
+			dest: 'classmap.php',
+            filter: function (item) {
+                return item.name != 'My_Unwanted_Class';
+            }
         }
 ```
 
@@ -243,3 +267,8 @@ Fix: typo in the default template comments
 Fix: correct stupid mistake of writing the classmap inside a loop
 Update: add the quote_path option
 Update: the default template to use the quote_path
+
+### Version 0.0.6
+
+Update: add the map option for changing the item
+Change: change the existing filter option functionality to filter found entries

@@ -25,12 +25,13 @@ module.exports = function (grunt) {
 
         // Merge task-specific and/or target-specific options with these defaults.
         var options = this.options({
+            quote_path: true,
             basedir: path.resolve('.'),
             dest: null,
             phpbin: 'php',
             template: null,
-            quote_path: true,
-            filter: function(item) { return item },
+            map: null,
+            filter: null,
             render: function(items, cb) {
                 fs.readFile(options.template, function(err, template) {
                     if (err) throw err;
@@ -130,11 +131,20 @@ module.exports = function (grunt) {
                             if (items.hasOwnProperty(j)) {
                                 var item = files[i][j];
                                 item['absolute_path'] = i.replace(/\\/g, '/');
-                                item['relative_path'] = item['absolute_path'].substr(path.resolve(options['basedir']).length).replace(/\\/g, '/');
-                                entries.push(options['filter'].call(this, item));
+                                item['relative_path'] = item['absolute_path'].substr(path.resolve(options['basedir']).length + 1).replace(/\\/g, '/');
+                                entries.push(item);
                             }
                         }
                     }
+                }
+
+
+                if(typeof options['filter'] == 'function') {
+                    entries = entries.filter(options['filter']);
+                }
+
+                if(typeof options['map'] == 'function') {
+                    entries = entries.map(options['map']);
                 }
 
                 options['render'].call(this, entries, function(src) {
@@ -142,6 +152,7 @@ module.exports = function (grunt) {
                     done();
                 });
             });
+
         }.bind(this));
     });
 };
