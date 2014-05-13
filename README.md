@@ -53,7 +53,7 @@ Path to the php executable
 Type: `Boolean`
 Default value: true
 
-Wether or not the classes in the classmap should be quoted. There might be some situations where you don't want to do that, for instance in the [Filter Example](#filterexample).
+Wether or not the classes in the classmap should be quoted. There might be some situations where you don't want to do that, for instance in the [filter example](#filter-example).
 
 #### options.dest
 Type: `String`
@@ -78,13 +78,13 @@ Function which maps the entry inside the destination classmap file. The function
 Type: `Function`
 Default value: none
 
-Function which can be used to filter out unwanted items for the classmap, see the [Filter Example](#filterexample)
+Function which can be used to filter out unwanted items for the classmap, see the [filter example](#filter-example)
 
 #### options.sort
 Type: `Function`
 Default value: none
 
-Function which allows you to sort the found classes by providing a function which will be used by the Array.prototype.sort function, see the [Sort Example](#sortexample)
+Function which allows you to sort the found classes by providing a function which will be used by the Array.prototype.sort function, see the [sort example](#sort-example)
 
 ### Usage Examples
 
