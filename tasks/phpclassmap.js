@@ -32,6 +32,7 @@ module.exports = function (grunt) {
             template: null,
             map: null,
             filter: null,
+			sort: null,
             render: function(items, cb) {
                 fs.readFile(options.template, function(err, template) {
                     if (err) throw err;
@@ -119,7 +120,38 @@ module.exports = function (grunt) {
                     grunt.log.error('ERROR OCCURED: ' + error);
                 }
 
-                var files = JSON.parse(stdout);
+                var response = JSON.parse(stdout);
+
+				var errors = response.errors;
+				var warnings = response.warnings;
+				var notices = response.notices;
+
+				if( errors.length > 1) {
+					log.writeln('Errors during classmap generation:'.red);
+					for(var i = 0; i < errors.length; i++) {
+						log.writeln(("\t" + errors[i]).red);
+					}
+				} else if(errors.length == 1) {
+					log.writeln(('Error during classmap generation: ' + errors[0]).red);
+				}
+				if( warnings.length > 1) {
+					log.writeln('Warnings during classmap generation:'.yellow);
+					for(var i = 0; i < warnings.length; i++) {
+						log.writeln(("\t" + warnings[i]).yellow);
+					}
+				} else if(warnings.length == 1) {
+					log.writeln(('Warning during classmap generation: ' + warnings[0]).yellow);
+				}
+				if( notices.length > 1) {
+					log.writeln('Notices during classmap generation:'.blue);
+					for(var i = 0; i < notices.length; i++) {
+						log.writeln(("\t" + notices[i]).blue);
+					}
+				} else if(notices.length == 1) {
+					log.writeln(('Notice during classmap generation: ' + notices[0]).blue);
+				}
+
+				var files = response.files;
 
                 var entries = [];
 
@@ -146,6 +178,12 @@ module.exports = function (grunt) {
                 if(typeof options['map'] == 'function') {
                     entries = entries.map(options['map']);
                 }
+
+				if(typeof options.sort == 'function') {
+					entries.sort(options.sort);
+				} else {
+					entries.sort();
+				}
 
                 options['render'].call(this, entries, function(src) {
                     grunt.file.write(options['dest'], src);

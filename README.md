@@ -51,9 +51,9 @@ Path to the php executable
 
 #### options.quote_path
 Type: `Boolean`
-Default valie: true
+Default value: true
 
-Wether or not the classes in the classmap should be quoted. There might be some situations where you don't want to do that, for instance in the [filter example](#filter_example).
+Wether or not the classes in the classmap should be quoted. There might be some situations where you don't want to do that, for instance in the [Filter Example](#filterexample).
 
 #### options.dest
 Type: `String`
@@ -78,7 +78,13 @@ Function which maps the entry inside the destination classmap file. The function
 Type: `Function`
 Default value: none
 
-Function which can be used to filter out unwanted items for the classmap.
+Function which can be used to filter out unwanted items for the classmap, see the [Filter Example](#filterexample)
+
+#### options.sort
+Type: `Function`
+Default value: none
+
+Function which allows you to sort the found classes by providing a function which will be used by the Array.prototype.sort function, see the [Sort Example](#sortexample)
 
 ### Usage Examples
 
@@ -115,7 +121,7 @@ return array(
 /* EOF */
 ```
 
-#### <a name="filter_example"></a>Map items to use a defined constant
+#### Map items to use a defined constant
 
 In this example, we use override the format function in order to use a defined constant inside the resulting classmap
 
@@ -138,7 +144,7 @@ grunt.initConfig({
 });
 ```
 
-#### <a name="custom_template_example"></a> Change the default handlebars template
+#### Custom handlebars template
 
 grunt-phpclassmap uses handlebars to render the classmap file, you can specify a custom handlebars template, like so:
 
@@ -167,7 +173,7 @@ currenty the compiled template recieves data in the form:
 }
 ```
 
-#### <a name="custom_render_example"></a>Override the render functionality
+#### Custom the render functionality
 
 besides changing the template it's also possible to define you own render function, like so:
 
@@ -199,7 +205,7 @@ grunt.initConfig({
 
 **IMPORTANT**: When you override the render method be sure to call to callback which is provided to the function, as this is the function which writes to results to the classmap.
 
-#### <a name="custom_map_and_render"></a> Overriding the map and render
+#### Custom map and render functionality
 
 In this example you can see how you can mix the map and render function to do some custom stuff.
 Note that the map allows you to add additional data, which is written in de render function. This could have also been
@@ -227,7 +233,7 @@ grunt.initConfig({
         }
 ```
 
-#### <a name="filter_example"></a> Filter out some unwanted classes
+#### Filter example
 
 The filter option can be used to remove unwanted items, the function should return a `Boolean`. It should return true to include the item in the classmap; otherwise, false.
 
@@ -240,7 +246,60 @@ grunt.initConfig({
                 return item.name != 'My_Unwanted_Class';
             }
         }
+	}
+});
 ```
+
+#### Sort example
+
+The sort option can be used to sort the objects before they are written to the classmap file.
+
+```js
+grunt.initConfig({
+    phpclassmap: {
+		options: {
+			dest: './classmap.php',
+			sort: function(a, b) {
+				var aa = a.name.toUpperCase();
+				var bb = b.name.toUpperCase();
+				return (aa < bb) ? -1 : (aa > bb) ? 1 : 0;
+			}
+		},
+		files  : {
+            src   : [ 'src/**/*.php' ],
+            expand: true
+        }
+	}
+}
+```
+
+#### Combined with grunt-contrib-watch
+
+Example of a nice way to automaticly generate classmaps during development.
+
+```js
+grunt.initConfig({
+    phpclassmap: {
+        options: {
+			dest: 'classmap.php',
+            filter: function (item) {
+                return item.name != 'My_Unwanted_Class';
+            }
+        },
+		files  : {
+            src   : [ 'classes/**/*.php' ],
+            expand: true
+        }
+	},
+	watch: {
+		phpclassmap: {
+			files: ['classes/**/*.php' ],
+			tasks: [ 'phpclassmap' ]
+		}
+	}
+});
+```
+
 
 ## Release History
 
@@ -272,3 +331,8 @@ Update: the default template to use the quote_path
 
 Update: add the map option for changing the item
 Change: change the existing filter option functionality to filter found entries
+
+### Version 0.0.7
+
+Update: add the sort option
+Update: provide better feedback of the found classmap results

@@ -6,137 +6,44 @@
  * Copyright (c) 2014 Maikel van Maurik
  * Licensed under the MIT license.
  */
+require_once dirname(__FILE__) . '/inc/functions.php';
+
 array_shift($argv);
 
 $options = array(
 	'files' => ''
 );
 
-/**
- * Parses the given argument and adds it to the options array
- *
- * @param string $arg argument to parse
- * @param array $options array which will recieve the parsed argument
- */
-function parse_arg($arg, &$options) {
-	if(preg_match('/--(?P<KEY>[a-z]+)=(?P<VALUE>.*)/', $arg, $matches)) {
-		if(!array_key_exists($matches['KEY'], $options)) {
-			trigger_error("Unknown option " . $matches['KEY']);
-		} else {
-			$options[$matches['KEY']] = $matches['VALUE'];
-		}
+$errors = $warnings = $notices = $files = array();
+
+$result = array(
+	'files' => &$files,
+	'errors' => &$errors,
+	'warnings' => &$warnings,
+	'notices' => &$notices
+);
+
+set_error_handler('handle_exception');
+set_exception_handler('handle_exception');
+
+try {
+	foreach($argv as $arg) {
+		parse_arg($arg, $options);
 	}
-}
 
-/**
- * Parses the file to retrieve classes, interfaces and traits
- *
- * @param string $file
- * @return array assoc array of items
- */
-function parse_file($file) {
-
-	$results = array();
-	$classes = $interfaces = $traits = array();
-	$savedNamespace = null;
-	$contents = file_get_contents($file);
-	$tokens   = token_get_all($contents);
-	$count    = count($tokens);
-	$t_trait  = defined('T_TRAIT') ? T_TRAIT : -1; // For preserve PHP 5.3 compatibility
-	for ($i = 0; $i < $count; $i++) {
-		$token = $tokens[$i];
-		if (!is_array($token)) {
-			// single character token found; skip
-			$i++;
-			continue;
-		}
-		switch ($token[0]) {
-			case T_NAMESPACE:
-				// Namespace found; grab it for later
-				$namespace = '';
-				for ($i++; $i < $count; $i++) {
-					$token = $tokens[$i];
-					if (is_string($token)) {
-						if (';' === $token) {
-							$saveNamespace = false;
-							break;
-						}
-						if ('{' === $token) {
-							$saveNamespace = true;
-							break;
-						}
-						continue;
-					}
-					list($type, $content, $line) = $token;
-					switch ($type) {
-						case T_STRING:
-						case T_NS_SEPARATOR:
-							$namespace .= $content;
-							break;
-					}
-				}
-				if ($saveNamespace) {
-					$savedNamespace = $namespace;
-				}
-				break;
-			case $t_trait:
-			case T_CLASS:
-			case T_INTERFACE:
-				// Abstract class, class, interface or trait found
-
-				// Get the classname
-				for ($i++; $i < $count; $i++) {
-					$token = $tokens[$i];
-					if (is_string($token)) {
-						continue;
-					}
-					list($type, $content, $line) = $token;
-					if (T_STRING == $type) {
-						// If a classname was found, set it in the object, and
-						// return boolean true (found)
-						if (!isset($namespace) || null === $namespace) {
-							if (isset($saveNamespace) && $saveNamespace) {
-								$namespace = $savedNamespace;
-							} else {
-								$namespace = null;
-							}
-
-						}
-						$class = (null === $namespace) ? $content : $namespace . '\\' . $content;
-						$results[] = array(
-							'type' => 'class',
-							'name' => $class,
-							'absolute_path' => $file
-						);
-
-						$namespace = null;
-						break;
-					}
-				}
-				break;
-			default:
-				break;
-		}
+	if(!isset($options['files']) || empty($options['files'])) {
+		throw new Exception('No files found', E_WARNING);
 	}
-	return $results;
-}
 
-foreach($argv as $arg) {
-	parse_arg($arg, $options);
-}
+	// Create array of the files
+	$options['files'] = explode(',', $options['files']);
 
-if(!isset($options['files'])) {
-	echo "No files specified";
-	trigger_error('No files specified');
-}
-
-// Create array of the files
-$options['files'] = explode(',', $options['files']);
-
-$result = array();
-
-foreach($options['files'] as $file) {
-	$result[$file] = parse_file($file);
+	foreach($options['files'] as $file) {
+		$files[$file] = parse_file($file);
+	}
+} catch(Exception $e) {
+	$type = exception_code_string($e->getCode()).'s';
+	array_push($$type, $e->getMessage());
 }
 
 print json_encode($result);
