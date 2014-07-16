@@ -11,7 +11,8 @@ require_once dirname(__FILE__) . '/inc/functions.php';
 array_shift($argv);
 
 $options = array(
-	'files' => ''
+	'files' => '',
+    'out' => ''
 );
 
 $errors = $warnings = $notices = $files = array();
@@ -30,7 +31,7 @@ try {
 	foreach($argv as $arg) {
 		parse_arg($arg, $options);
 	}
-
+	
 	if(!isset($options['files']) || empty($options['files'])) {
 		throw new Exception('No files found', E_WARNING);
 	}
@@ -46,4 +47,8 @@ try {
 	array_push($$type, $e->getMessage());
 }
 
-print json_encode($result);
+if(isset($options['out'])) {
+    file_put_contents($options['out'], json_encode($result));   
+} else {
+    print json_encode($result);
+}

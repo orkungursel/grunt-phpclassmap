@@ -7,6 +7,7 @@
  */
 
 'use strict';
+var os = require('os');
 
 module.exports = function (grunt) {
     // Please see the Grunt documentation for more information regarding task
@@ -111,16 +112,22 @@ module.exports = function (grunt) {
                     files.push(filepath);
                 }
             });
+            
+            var jsonFile = os.tmpdir() + 'classes.json';
 
-            var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '"';
+            var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '" --out="' + jsonFile + '"';
 
+            log.writeln(command);
+            
             cp.exec(command, function (error, stdout, stderr) {
                 // On success error will be null
                 if (error !== null) {
                     grunt.log.error('ERROR OCCURED: ' + error);
                 }
 
-                var response = JSON.parse(stdout);
+                var response = JSON.parse(fs.readFileSync(jsonFile));
+                
+                // var response = JSON.parse(stdout);
 
 				var errors = response.errors;
 				var warnings = response.warnings;

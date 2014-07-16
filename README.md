@@ -336,3 +336,7 @@ Change: change the existing filter option functionality to filter found entries
 
 Update: add the sort option
 Update: provide better feedback of the found classmap results
+
+### Version 0.0.8
+
+Update: support for bigger projects
