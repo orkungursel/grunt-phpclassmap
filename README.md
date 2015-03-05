@@ -344,3 +344,11 @@ Update: support for bigger projects
 ### Version 0.0.9
 
 Fix: PHP notice during class map generation
+
+### Version 0.0.10
+
+Fix: Temporary path fix
+
+### Version: 0.0.11
+
+Fix: add underscore and underscore.string as dependencies
