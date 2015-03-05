@@ -28,6 +28,25 @@ module.exports = function (grunt) {
             tests: ['tmp']
         },
 
+		bump: {
+			options: {
+				files: ['package.json'],
+				updateConfigs: [],
+				commit: true,
+				commitMessage: 'Release v%VERSION%',
+				commitFiles: ['package.json'],
+				createTag: true,
+				tagName: '%VERSION%',
+				tagMessage: 'Version %VERSION%',
+				push: true,
+				pushTo: 'upstream',
+				gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+				globalReplace: false,
+				prereleaseName: false,
+				regExp: false
+			}
+		},
+
         // Configuration to be run (and then tested).
         phpclassmap: {
             default_options: {
@@ -62,6 +81,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-nodeunit');
+	grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-exec');
 
     // Whenever the "test" task is run, first clean the "tmp" dir, then run this

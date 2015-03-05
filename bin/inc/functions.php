@@ -1,4 +1,5 @@
 <?php
+
 function handle_exception($err, $msg = null, $file = null, $line = null, $ctx = null ) {
 	global $errors, $warnings, $notices;
 	if(func_num_args() > 1) {
@@ -56,7 +57,7 @@ function parse_arg($arg, &$options) {
 function parse_file($file) {
 	$results = array();
 	$classes = $interfaces = $traits = array();
-	$savedNamespace = null;
+	$saveNamespace = $savedNamespace = null;
 	$contents = file_get_contents($file);
 	$tokens   = token_get_all($contents);
 	$count    = count($tokens);
