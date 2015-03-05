@@ -7,7 +7,9 @@
  */
 
 'use strict';
-var os = require('os');
+var os = require('os'),
+	_ = require('underscore'),
+	_s = require('underscore.string');
 
 module.exports = function (grunt) {
     // Please see the Grunt documentation for more information regarding task
@@ -113,7 +115,7 @@ module.exports = function (grunt) {
                 }
             });
             
-            var jsonFile = os.tmpdir() + 'classes.json';
+            var jsonFile = _s(os.tmpdir()).rtrim('/\\').value() + '/grunt-php-classmap-classes.json';
 
             var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '" --out="' + jsonFile + '"';
 
