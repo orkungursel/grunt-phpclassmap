@@ -352,3 +352,12 @@ Fix: Temporary path fix
 ### Version: 0.0.11
 
 Fix: add underscore and underscore.string as dependencies
+
+### Version: 0.0.12
+
+Update: add support for options per target
+
+### Version: 0.0.13
+
+Fix: relative paths were not generated properly
+Fix: many files caused to generator to fail

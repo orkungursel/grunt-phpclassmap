@@ -50,7 +50,7 @@ module.exports = function (grunt) {
                     cb(compiled({quote_path: options.quote_path, items: items, date: dateformat(new Date(), "isoDateTime")}));
                 });
             }
-        });
+        }, this.data);
 
         handlebars.registerHelper("foreach",function(arr,options) {
             if(options.inverse && !arr.length)
@@ -115,11 +115,16 @@ module.exports = function (grunt) {
                 }
             });
             
-            var jsonFile = _s(os.tmpdir()).rtrim('/\\').value() + '/grunt-php-classmap-classes.json';
+            var jsonFile = _s(os.tmpdir()).rtrim('/\\').value() + '/grunt-php-classmap-classes.json',
+                fileMap = _s(os.tmpdir()).rtrim('/\\').value() + '/grunt-php-classmap-files.json';
 
-            var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --files="' + files.join(',') + '" --out="' + jsonFile + '"';
+            // Write the files to a temporary file
+            log.debug("Write filemap to " + fileMap);
+            fs.writeFileSync(fileMap, JSON.stringify(files));
 
-            log.writeln(command);
+            var command = options['phpbin'] + ' "' + path.resolve(bindir, 'generator.php') + '" --filemap="' + fileMap + '" --out="' + jsonFile + '"';
+
+            log.debug(command);
             
             cp.exec(command, function (error, stdout, stderr) {
                 // On success error will be null
@@ -164,6 +169,8 @@ module.exports = function (grunt) {
 
                 var entries = [];
 
+                var basedir = path.resolve(options['basedir']);
+
                 // Iterate over the classes, interfaces and traits we got back from the php cli script
                 for (var i in files) {
                     if (files.hasOwnProperty(i)) {
@@ -172,13 +179,12 @@ module.exports = function (grunt) {
                             if (items.hasOwnProperty(j)) {
                                 var item = files[i][j];
                                 item['absolute_path'] = i.replace(/\\/g, '/');
-                                item['relative_path'] = item['absolute_path'].substr(path.resolve(options['basedir']).length + 1).replace(/\\/g, '/');
+                                item['relative_path'] = path.relative(basedir, item['absolute_path']);
                                 entries.push(item);
                             }
                         }
                     }
                 }
-
 
                 if(typeof options['filter'] == 'function') {
                     entries = entries.filter(options['filter']);

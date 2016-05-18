@@ -10,34 +10,52 @@ require_once dirname(__FILE__) . '/inc/functions.php';
 
 array_shift($argv);
 
-$options = array(
+$options = [
 	'files' => '',
-    'out' => ''
-);
+    'out' => '',
+    'filemap' => ''
+];
 
-$errors = $warnings = $notices = $files = array();
+$errors = $warnings = $notices = $files = [];
 
-$result = array(
+$result = [
 	'files' => &$files,
 	'errors' => &$errors,
 	'warnings' => &$warnings,
 	'notices' => &$notices
-);
+];
 
 set_error_handler('handle_exception');
 set_exception_handler('handle_exception');
 
 try {
+
 	foreach($argv as $arg) {
 		parse_arg($arg, $options);
 	}
+
+    // Create array of the files
+    if(!empty($options['files'])) {
+        $options['files'] = explode(',', $options['files']);
+    }
+
+
+    if (!empty($options['filemap'])) {
+        $map = file_get_contents($options['filemap']);
+
+        if(empty($map)) {
+            throw new Exception("Unable to read filemap " . $options['filemap']);
+        }
+
+        $options['files'] = array_merge(
+            is_array($options['files']) ? $options['files'] : [],
+            json_decode($map)
+        );
+    }
 	
-	if(!isset($options['files']) || empty($options['files'])) {
+	if(empty($options['files'])) {
 		throw new Exception('No files found', E_WARNING);
 	}
-
-	// Create array of the files
-	$options['files'] = explode(',', $options['files']);
 
 	foreach($options['files'] as $file) {
 		$files[$file] = parse_file($file);
