@@ -6,7 +6,7 @@
     ]
   ],
   "_from": "grunt-phpclassmap@latest",
-  "_id": "grunt-phpclassmap@0.0.12",
+  "_id": "grunt-phpclassmap@0.0.13",
   "_inCache": true,
   "_installable": true,
   "_location": "/grunt-phpclassmap",
@@ -99,5 +99,5 @@
   "scripts": {
     "test": "grunt test"
   },
-  "version": "0.0.12"
+  "version": "0.0.13"
 }
