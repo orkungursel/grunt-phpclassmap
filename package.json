@@ -1,103 +1,35 @@
 {
-  "_args": [
-    [
-      "grunt-phpclassmap",
-      "/vagrant"
-    ]
-  ],
-  "_from": "grunt-phpclassmap@latest",
-  "_id": "grunt-phpclassmap@0.0.13",
-  "_inCache": true,
-  "_installable": true,
-  "_location": "/grunt-phpclassmap",
-  "_nodeVersion": "0.12.3",
-  "_npmUser": {
-    "email": "maikelvanmaurik@gmail.com",
-    "name": "maikelvanmaurik"
+  "name": "grunt-phpclassmap",
+  "version": "1.0.0",
+  "description": "Generates classmaps for PHP files.",
+  "main": "Gruntfile.js",
+  "directories": {
+    "test": "test"
   },
-  "_npmVersion": "2.7.5",
-  "_phantomChildren": {},
-  "_requested": {
-    "name": "grunt-phpclassmap",
-    "raw": "grunt-phpclassmap",
-    "rawSpec": "",
-    "scope": null,
-    "spec": "latest",
-    "type": "tag"
+  "scripts": {
+    "test": "grunt test"
   },
-  "_requiredBy": [
-    "#DEV:/"
-  ],
-  "_resolved": "https://registry.npmjs.org/grunt-phpclassmap/-/grunt-phpclassmap-0.0.12.tgz",
-  "_shasum": "f6b7ac702965ef530a1f6cd5902980472f07179f",
-  "_shrinkwrap": null,
-  "_spec": "grunt-phpclassmap",
-  "_where": "/vagrant",
-  "author": {
-    "email": "maikelvanmaurik@gmail.com",
-    "name": "Maikel van Maurik",
-    "url": "http://www.maikelvanmaurik.nl"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/orqun/grunt-phpclassmap.git"
   },
+  "author": "Orkun Gursel <orkungrsl@gmail.com> (http://wptation.com)",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/maikelvanmaurik/grunt-phpclassmap/issues"
+    "url": "https://github.com/orqun/grunt-phpclassmap/issues"
   },
+  "homepage": "https://github.com/orqun/grunt-phpclassmap#readme",
   "dependencies": {
     "dateformat": "^1.0.7-1.2.3",
     "handlebars": "^2.0.0-alpha.2",
     "underscore": "^1.8.2",
     "underscore.string": "^3.0.3"
   },
-  "description": "Generate PHP classmap files using Grunt",
   "devDependencies": {
     "grunt": "^0.4.5",
     "grunt-bump": "^0.3.0",
     "grunt-contrib-clean": "^0.5.0",
     "grunt-contrib-jshint": "^0.9.2",
     "grunt-contrib-nodeunit": "^0.3.3"
-  },
-  "directories": {},
-  "dist": {
-    "shasum": "f6b7ac702965ef530a1f6cd5902980472f07179f",
-    "tarball": "https://registry.npmjs.org/grunt-phpclassmap/-/grunt-phpclassmap-0.0.12.tgz"
-  },
-  "engines": {
-    "node": ">= 0.8.0"
-  },
-  "gitHead": "23bb0b5bed954cbae78882c8c448b481ab16ee93",
-  "homepage": "https://github.com/maikelvanmaurik/grunt-phpclassmap",
-  "keywords": [
-    "gruntplugin",
-    "gruntplugin",
-    "grunt task",
-    "grunt",
-    "generate",
-    "php",
-    "classmap"
-  ],
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/maikelvanmaurik/grunt-phpclassmap/blob/master/LICENSE-MIT"
-    }
-  ],
-  "maintainers": [
-    {
-      "email": "maikelvanmaurik@gmail.com",
-      "name": "maikelvanmaurik"
-    }
-  ],
-  "name": "grunt-phpclassmap",
-  "optionalDependencies": {},
-  "peerDependencies": {
-    "grunt": "~0.4.4"
-  },
-  "readme": "ERROR: No README data found!",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/maikelvanmaurik/grunt-phpclassmap.git"
-  },
-  "scripts": {
-    "test": "grunt test"
-  },
-  "version": "0.0.13"
+  }
 }
