@@ -104,10 +104,16 @@ module.exports = function (grunt) {
                                 })
                             }
                         }
+
+                        if ( current.children && current.children.length > 0 ) {
+                            memo = checkTokens( current.children, memo );
+                        }
+
+                        if ( current.body && current.body && current.body.children ) {
+                            memo = checkTokens( current.body.children, memo );
+                        }
                     }
-                    if ( current.children && current.children.length > 0 ) {
-                        memo = checkTokens( current.children, memo );
-                    }
+
                     return memo;
                 }, initial);
             }
