@@ -24,25 +24,15 @@ var grunt = require('grunt');
 
 exports.php_classmap_generator = {
   setUp: function(done) {
-    // setup here if necessary
+    this.classMapContent = grunt.file.read('tmp/classmap.php');
     done();
   },
-  default_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/default_options');
-    var expected = grunt.file.read('test/expected/default_options');
-    test.equal(actual, expected, 'should describe what the default behavior is.');
-
+  classMapTests: function(test) {
+    test.equal(/^\W+"Foo\\Bar"?\W+=>?\W+"test\/fixtures\/class-foo\.php"\,?$/m.test(this.classMapContent), true);
+    test.equal(/^\W+"Test"?\W+=>?\W+"test\/fixtures\/class-test\.php"\,?$/m.test(this.classMapContent), true);
+    test.equal(/^\W+"Bar\\Baz"?\W+=>/m.test(this.classMapContent), true);
+    test.equal(/^\W+"Bar\\Loo"?\W+=>/m.test(this.classMapContent), true);
+    test.equal(/^\W+"add_filter|init"?\W+=>/m.test(this.classMapContent), false, "Add filter or init should not be in the classmap.");
     test.done();
-  },
-  custom_options: function(test) {
-    test.expect(1);
-
-    var actual = grunt.file.read('tmp/custom_options');
-    var expected = grunt.file.read('test/expected/custom_options');
-    test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
-
-    test.done();
-  },
+  }
 };
