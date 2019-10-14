@@ -43,12 +43,6 @@ Default value: .
 
 Base directory from which to create the relative paths to class files, defaults to `process.cwd`.
 
-#### options.phpbin
-Type: `String`
-Default value: 'php'
-
-Path to the php executable
-
 #### options.quote_path
 Type: `Boolean`
 Default value: true
