@@ -1,6 +1,6 @@
 {
   "name": "grunt-phpclassmap",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Generates classmaps for PHP files.",
   "main": "Gruntfile.js",
   "directories": {
